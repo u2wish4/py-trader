@@ -1,0 +1,4 @@
+backtrader
+pandas
+quandl
+yfinance
