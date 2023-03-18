@@ -1,8 +1,16 @@
 import backtrader as bt
 import pandas as pd
 import quandl
+import yfinance as yf
 
 quandl.ApiConfig.api_key = 'Ue5ZXwiprG4dVywqsSxf' # replace with your Quandl API key
+
+def get_stock_price(ticker_symbol):
+    # code to access and return the current price of the stock 
+    ticker_data = yf.Ticker(ticker_symbol) # create a Ticker object
+    today_data = ticker_data.history(period="1d") # get today's data as a pandas DataFrame
+    price = today_data["Close"][0] # get the closing price of today
+    return price
 
 class SimpleStrategy(bt.Strategy):
     
@@ -19,8 +27,10 @@ class SimpleStrategy(bt.Strategy):
         
 cerebro = bt.Cerebro()
 
-data = bt.feeds.PandasData(dataname=quandl.get('WIKI/AAPL', start_date='2016-01-01', end_date='2021-12-31'))
-
+ticker_symbol = input("Enter the stock symbol: ") # ask for user input
+data = bt.feeds.PandasData(dataname=quandl.get('WIKI/' + ticker_symbol, start_date='2016-01-01', end_date='2021-12-31')) # use user input in quandl.get function
+current_price = get_stock_price(ticker_symbol) # call the function with user input
+print(current_price) # print
 
 cerebro.adddata(data)
 cerebro.addstrategy(SimpleStrategy)
@@ -31,3 +41,4 @@ cerebro.broker.setcommission(commission=0.001)
 cerebro.run()
 
 print('Final Portfolio Value: %.2f' % cerebro.broker.getvalue())
+
