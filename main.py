@@ -27,8 +27,10 @@ class SimpleStrategy(bt.Strategy):
         
 cerebro = bt.Cerebro()
 
+start_date = input("Enter the start date: ") # ask for user input 
+end_date = input("Enter the end date: ") # ask for user input 
 ticker_symbol = input("Enter the stock symbol: ") # ask for user input
-data = bt.feeds.PandasData(dataname=quandl.get('WIKI/' + ticker_symbol, start_date='2016-01-01', end_date='2021-12-31')) # use user input in quandl.get function
+data = bt.feeds.PandasData(dataname=quandl.get('WIKI/' + ticker_symbol, start_date=start_date, end_date=end_date)) # use user input in quandl.get function
 current_price = get_stock_price(ticker_symbol) # call the function with user input
 print(current_price) # print
 
@@ -41,4 +43,3 @@ cerebro.broker.setcommission(commission=0.001)
 cerebro.run()
 
 print('Final Portfolio Value: %.2f' % cerebro.broker.getvalue())
-
